@@ -1,0 +1,42 @@
+div.header {
+  padding: 12px;
+  text-align: center;
+  background: #1a80bc;
+  color: #e6e5e5;
+  font-size: 20px;
+}
+
+a.header-link {
+  color: #e6e5e5;
+  text-decoration: none;
+}
+
+div.flash-message {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+}
+
+div.body {
+  padding-top: 6em;
+}
+
+/* input#username, input#room {
+  display: inline-block;
+  width: 69%;
+  height: calc(1.5em + 0.81rem + 2px);
+} */
+
+li.user {
+  list-style: none;
+}
+
+span.link {
+  color: cornflowerblue;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+span.link:hover {
+  text-decoration: underline;
+}
