@@ -8,7 +8,7 @@ const userService = {
         name: params.name
       }).save();
 
-      addPeer(user);
+      resgisterPeer(user);
 
       return {
         status: 200,
@@ -60,15 +60,20 @@ const userService = {
   }
 };
 
-function addPeer(user) {
-  axios({
-    baseURL: "http://localhost:4100",
-    method: "POST",
-    url: "/peers",
-    data: {
-      peer: user
-    }
-  });
+function resgisterPeer(user) {
+  try {
+    axios({
+      baseURL: "http://localhost:4100",
+      method: "POST",
+      url: "/peers/register",
+      data: {
+        peer: user
+      }
+    });
+  } catch (error) {
+    console.log("\nError requesting GoReal:", error);
+  }
+
 }
 
 
