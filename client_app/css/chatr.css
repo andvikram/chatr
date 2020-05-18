@@ -40,3 +40,48 @@ span.link {
 span.link:hover {
   text-decoration: underline;
 }
+
+.room-container.container {
+  max-width: 1050px;
+  border-radius: 10px;
+}
+
+div.user-img img {
+  height: 48px;
+  width: 48px;
+}
+
+div.input-group {
+  width: 103.1%;
+  left: -16px;
+}
+
+div.user-prof {
+  height: 100px;
+  text-align: center;
+  padding: unset;
+  padding-top: 8px;
+}
+
+div.prof {
+  height: 100px;
+  padding: unset;
+  padding-top: 8px;
+}
+
+span.img {
+  padding-right: 10px;
+}
+
+span.img img {
+  height: 48px;
+  width: 48px;
+}
+
+div.messages-box.left {
+  background: #d4f3ff;
+}
+
+div.messages-box.right {
+  background: #c3dcf7;
+}

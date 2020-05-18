@@ -1,12 +1,15 @@
+const axios = require('axios');
 const Room = require(__basedir + '/server_app/models/room.js');
 const Joinee = require(__basedir + '/server_app/models/joinee.js');
 
-module.exports = {
+const roomService = {
   create: async function(params) {
     try {
       const room = await new Room({
         name: params.name
       }).save();
+
+      resgisterTopic(room);
 
       return {
         status: 200,
@@ -59,7 +62,8 @@ module.exports = {
   join: async function(params) {
     try {
       const joinee = await new Joinee({
-        roomID: params.room_id
+        roomID: params.room_id,
+        userIDs: params.user_ids
       }).save();
 
       return {
@@ -111,3 +115,24 @@ module.exports = {
     }
   }
 };
+
+function resgisterTopic(room) {
+  try {
+    axios({
+      baseURL: "http://localhost:4100",
+      method: "POST",
+      url: "topics/register",
+      data: {
+        id: room.id,
+        name: room.name
+      }
+    })
+    .then(response => console.log("resgisterTopic:", response.data))
+    .catch(error => console.log(error));
+  } catch (error) {
+    console.log("\nError requesting GoReal:", error);
+  }
+
+}
+
+module.exports = roomService;

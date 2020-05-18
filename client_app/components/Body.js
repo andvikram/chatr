@@ -15,14 +15,6 @@ const Body = (props) => {
 	const [inputVal, setInputVal] = useState(null);
 	const [inputEl, setInputEl] = useState(null);
 	const [usernamePresent, setUsernamePresent] = useState(false);
-  // const [toggleStates, setToggleStates] = useState({});
-  // const setState = (key) => {
-  //   let val = true;
-  //   if (toggleStates[key]) {
-  //     val = !toggleStates[key];
-  //   }
-  //   setToggleStates({...toggleStates, [key]: val});
-  // };
 
   useEffect(() => {
     props.apiService.getUsers()
@@ -42,7 +34,7 @@ const Body = (props) => {
 		setInputVal(e.target.value);
 		setInputEl(e.target);
 	}
-	
+
 	const submitForm = (e) => {
 		e.preventDefault();
 		if (inputEl.id == 'username') {
@@ -52,7 +44,7 @@ const Body = (props) => {
 					flashObj.set('primary', response.data.message);
 				} else {
 					flashObj.set('success', response.data.message);
-					setUsers(users => users.push(response.data.object));
+					setUsers(users => users.concat(response.data.object));
 				}
 				setCurrentUser(response.data.object);
 				inputEl.value = null;
@@ -66,9 +58,8 @@ const Body = (props) => {
 					flashObj.set('primary', response.data.message);
 				} else {
 					flashObj.set('success', response.data.message);
-					setRooms(rooms => rooms.push(response.data.object));
+					setRooms(rooms => rooms.concat(response.data.object));
 				}
-				setSelectedRoom(response.data.object);
 				inputEl.value = null;
 			})
       .catch((error) => console.log(error));
@@ -81,7 +72,6 @@ const Body = (props) => {
       .then(response => {
 				flashObj.set('success', response.data.message);
 				setJoinees(joinees => joinees.concat(response.data.object.users));
-				inputEl.value = null;
 			})
       .catch((error) => console.log(error));
 	}
@@ -92,7 +82,7 @@ const Body = (props) => {
 				<h4>{'Hi! Please enter your user name.'}</h4>
 				<br /><br />
 				<FormGroup>
-					<Input type="username" name="username" id="username" 
+					<Input type="username" name="username" id="username"
 						placeholder="@ Username" onChange={handleInputChange}
 					/>
 				</FormGroup>
@@ -108,7 +98,7 @@ const Body = (props) => {
 				<h4>{`${_string.startCase(currentUser.name)}, please join a listed room or create new.`}</h4>
 				<br /><br />
 				<FormGroup>
-					<Input type="room" name="room" id="room" 
+					<Input type="room" name="room" id="room"
 						placeholder="@ Room" onChange={handleInputChange}
 					/>
 				</FormGroup>
@@ -124,7 +114,7 @@ const Body = (props) => {
 				return users.map((user) => {
 					return(
 						<ListGroupItem key={user.id} className="user">
-							<span className="link" 
+							<span className="link"
 								onClick={() => {
 									setCurrentUser(user);
 									setUsernamePresent(true);
@@ -145,7 +135,7 @@ const Body = (props) => {
     }
     return null;
 	}
-	
+
 	function renderRooms() {
     if (rooms.length > 0) {
 			function renderRoom() {
@@ -168,7 +158,7 @@ const Body = (props) => {
     }
     return null;
 	}
-	
+
 	function renderForm() {
 		if (usernamePresent) {
 			return renderRoomForm();
@@ -185,7 +175,10 @@ const Body = (props) => {
 
 	function renderBody() {
 		if (selectedRoom) {
-			return (<Room room={selectedRoom} users={joinees} />);
+			return (
+				<Room room={selectedRoom} user={currentUser}
+					joinees={joinees} apiService={props.apiService} />
+			);
 		}
 		return (
 			<Container className="form-container">

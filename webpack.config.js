@@ -66,5 +66,5 @@ let nodeConfig = Object.assign({}, config, {
 });
 
 module.exports = [
-	webConfig, nodeConfig,       
+	webConfig, nodeConfig,
 ];

@@ -6,7 +6,8 @@ let Room = new Schema({
     type: String,
     required: [true, 'name is required'],
     lowercase: true
-  }
+  },
+  messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }]
 }, {
   timestamps: true
 });

@@ -62,15 +62,26 @@ class APIService {
     });
   }
 
-  submitMessage(message) {
+  submitMessage(message, roomID, userID) {
     const url = `messages`;
     return axios({
       baseURL: this.baseAPIURL,
       method: "POST",
       url: url,
       data: {
-        message: message
+        message: message,
+        room_id: roomID,
+        user_id: userID
       }
+    });
+  }
+
+  getMessagesInRoom(roomID) {
+    const url = `rooms/${roomID}/messages`;
+    return axios({
+      baseURL: this.baseAPIURL,
+      method: "GET",
+      url: url
     });
   }
 }

@@ -1,5 +1,7 @@
 const roomService = require(__basedir + '/server_app/services/room.js');
 const userService = require(__basedir + '/server_app/services/user.js');
+const messageService = require(__basedir + '/server_app/services/message.js');
+const mongoose = require('mongoose');
 const _array = require('lodash/array');
 
 const roomController = {
@@ -24,11 +26,10 @@ const roomController = {
   },
 
   fetch: function(req, res) {
-    const response = roomService.fetch({
+    roomService.fetch({
       id: req.params.id
-    });
-
-    return res.status(response.status).json(response.data);
+    })
+    .then(result => res.status(result.status).json(result));
   },
 
   fetchAll: function(req, res) {
@@ -43,7 +44,8 @@ const roomController = {
     .then(result => {
       if (result.object && result.object.length > 0) {
         let joinee = result.object[0];
-        joinee.userIDs = _array.uniq(joinee.userIDs.push(req.body.user_id));
+        joinee.userIDs.push(req.body.user_id)
+        joinee.userIDs = _array.uniq(joinee.userIDs);
         roomService.updateJoinee(joinee)
         .then(result => {
           joinee = result.object;
@@ -60,6 +62,13 @@ const roomController = {
         });
       }
     });
+  },
+
+  fetchMessages: function(req, res) {
+    messageService.fetchByRoom({
+      roomID: req.params.id
+    })
+    .then(result => res.status(result.status).json(result));
   }
 };
 
@@ -72,17 +81,18 @@ function joinRoom(joinee, res) {
       roomService.fetch({ id: joinee.roomID })
       .then(result => {
         let room = result.object;
-        res.status(result.status).json({
+        let finalRes = {
           status: result.status,
           message: `Joined room ${room.name}!`,
           object: {
             room: room,
             users: users
           }
-        });
+        }
+        return res.status(result.status).json(finalRes);
       });
     } else {
-      res.status(result.status).json(result);
+      return res.status(result.status).json(result);
     }
   });
 }

@@ -65,11 +65,14 @@ function resgisterPeer(user) {
     axios({
       baseURL: "http://localhost:4100",
       method: "POST",
-      url: "/peers/register",
+      url: "peers/register",
       data: {
-        peer: user
+        id: user.id,
+        name: user.name
       }
-    });
+    })
+    .then(response => console.log("resgisterPeer:", response.data))
+    .catch(error => console.log(error));
   } catch (error) {
     console.log("\nError requesting GoReal:", error);
   }

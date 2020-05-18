@@ -13,6 +13,7 @@ router.post('/v1/rooms',roomController.create);
 router.get('/v1/rooms', roomController.fetchAll);
 router.get('/v1/rooms/:id', roomController.fetch);
 router.post('/v1/rooms/join', roomController.join);
+router.get('/v1/rooms/:id/messages', roomController.fetchMessages);
 
 router.post('/v1/messages', messageController.create);
 router.get('/v1/messages/:id', messageController.fetch);

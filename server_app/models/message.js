@@ -5,7 +5,9 @@ let Message = new Schema({
   text: {
     type: String,
     required: [true, 'text is required']
-  }
+  },
+  author: { type: Schema.Types.ObjectId, ref: 'User' },
+  topic: { type: Schema.Types.ObjectId, ref: 'Room' }
 }, {
   timestamps: true
 });
