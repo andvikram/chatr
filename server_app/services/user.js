@@ -8,8 +8,6 @@ const userService = {
         name: params.name
       }).save();
 
-      resgisterPeer(user);
-
       return {
         status: 200,
         message: 'Successfully created user',
@@ -59,25 +57,5 @@ const userService = {
     }
   }
 };
-
-function resgisterPeer(user) {
-  try {
-    axios({
-      baseURL: "http://localhost:4100",
-      method: "POST",
-      url: "peers/register",
-      data: {
-        id: user.id,
-        name: user.name
-      }
-    })
-    .then(response => console.log("resgisterPeer:", response.data))
-    .catch(error => console.log(error));
-  } catch (error) {
-    console.log("\nError requesting GoReal:", error);
-  }
-
-}
-
 
 module.exports = userService;

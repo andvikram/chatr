@@ -1,3 +1,4 @@
+const axios = require('axios');
 const Message = require(__basedir + '/server_app/models/message.js');
 
 module.exports = {
@@ -9,6 +10,8 @@ module.exports = {
     })
     try {
       await message.save().then(message => message.populate('author').execPopulate());
+
+      publish(message);
 
       return {
         status: 200,
@@ -60,3 +63,20 @@ module.exports = {
     }
   }
 };
+
+function publish(message) {
+  try {
+    axios({
+      baseURL: "http://localhost:4100",
+      method: "POST",
+      url: `/topics/${message.topic}/messages/new`,
+      data: {
+        message: JSON.stringify(message)
+      }
+    })
+    .catch(error => console.log(error))
+    .then(response => console.log("publishMessage:", response.data));
+  } catch (error) {
+    console.log("\nError requesting GoReal:", error);
+  }
+}

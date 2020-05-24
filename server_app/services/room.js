@@ -9,8 +9,6 @@ const roomService = {
         name: params.name
       }).save();
 
-      resgisterTopic(room);
-
       return {
         status: 200,
         message: 'Successfully created room',
@@ -115,24 +113,5 @@ const roomService = {
     }
   }
 };
-
-function resgisterTopic(room) {
-  try {
-    axios({
-      baseURL: "http://localhost:4100",
-      method: "POST",
-      url: "topics/register",
-      data: {
-        id: room.id,
-        name: room.name
-      }
-    })
-    .then(response => console.log("resgisterTopic:", response.data))
-    .catch(error => console.log(error));
-  } catch (error) {
-    console.log("\nError requesting GoReal:", error);
-  }
-
-}
 
 module.exports = roomService;

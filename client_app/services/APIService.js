@@ -7,14 +7,14 @@ class APIService {
     this.baseAPIURL = 'http://localhost:4000/api/v1'
   }
 
-  createUser(username) {
+  createUser(name) {
     const url = `users`;
     return axios({
       baseURL: this.baseAPIURL,
       method: "POST",
       url: url,
       data: {
-        name: username
+        name: name
       }
     });
   }

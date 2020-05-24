@@ -9,13 +9,43 @@ const Room = (props) => {
 	const [inputVal, setInputVal] = useState(null);
 	const [inputEl, setInputEl] = useState(null);
 	const [messages, setMessages] = useState([]);
+	let ws;
+
+	function scrollToBottom(elID) {
+		let objDiv = document.getElementById(elID);
+		objDiv.scrollTop = objDiv.scrollHeight;
+	}
+
+	function subscribe(ws, topicID, peer) {
+		// This message format is required by GoReal
+		const msg = { topicID:  topicID, peer: peer };
+		ws = new WebSocket("ws://localhost:4100/subscribe");
+		ws.onopen = function () {
+		  console.log("WebSocket connection established with server");
+			ws.send(JSON.stringify(msg));
+		}
+		ws.onclose = function () {
+		  console.log("WebSocket connection closed by server");
+		}
+		ws.onmessage = function (event) {
+			let mData = JSON.parse(JSON.parse(event.data));
+			setMessages(messages => messages.concat(mData));
+			scrollToBottom("messages");
+		}
+	}
 
 	useEffect(() => {
     props.apiService.getMessagesInRoom(props.room.id)
       .then(response => {
 				setMessages(response.data.object);
+				scrollToBottom("messages");
+				subscribe(ws, props.room.id, props.user.name);
 			})
 			.catch((error) => console.log(error));
+
+		return () => {
+    	ws.close();
+	  };
 	}, []);
 
 	const handleInputChange = (e) => {
@@ -28,9 +58,7 @@ const Room = (props) => {
 		e.preventDefault();
 		props.apiService.submitMessage(inputVal, props.room.id, props.user.id)
       .then(response => {
-				console.log("response.data.object:", response.data.object);
 				flashObj.set('success', response.data.message);
-				setMessages(messages => messages.concat(response.data.object));
 				inputEl.value = null;
 			})
       .catch((error) => console.log(error));
@@ -106,7 +134,7 @@ const Room = (props) => {
 				{_string.startCase(props.room.name)}
 			</h4>
 			<Row style={{ height: '350px', border: 'gray solid 1px' }}>
-				<Col xs="9" style={{ border: 'gray solid 1px', height: '348px', overflow: 'auto' }}>
+				<Col xs="9" id='messages' style={{ border: 'gray solid 1px', height: '348px', overflow: 'auto' }}>
 					{ renderMessages() }
 				</Col>
 				<Col xs="3" style={{ border: 'gray solid 1px' }}>
